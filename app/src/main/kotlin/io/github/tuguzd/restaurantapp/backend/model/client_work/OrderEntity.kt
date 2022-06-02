@@ -1,19 +1,25 @@
 package io.github.tuguzd.restaurantapp.backend.model.client_work
 
+import io.github.tuguzd.restaurantapp.backend.model.organization.ServiceItemPointEntity
+import io.github.tuguzd.restaurantapp.backend.model.role_access_control.user.UserEntity
 import io.github.tuguzd.restaurantapp.domain.model.client_work.order.Order
 import io.github.tuguzd.restaurantapp.domain.model.client_work.order.OrderData
-import io.github.tuguzd.restaurantapp.domain.model.organization.service_item_point.ServiceItemPoint
 import org.springframework.data.util.ProxyUtils
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity
 @Table(name = "\"order\"")
 class OrderEntity(
     @Id override val id: String,
 
-    override val serviceItemPoint: ServiceItemPoint?,
+    @ManyToOne(cascade = [CascadeType.MERGE], fetch = FetchType.EAGER)
+    @JoinColumn(name = "service_item_point_id", referencedColumnName = "id")
+    override val serviceItemPoint: ServiceItemPointEntity?,
+
+    @ManyToOne(cascade = [CascadeType.MERGE], fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    override val user: UserEntity?,
+
     override val description: String?,
 
     override val clientCount: Int,
@@ -21,6 +27,9 @@ class OrderEntity(
 
     override val datetimeCreate: String?,
     override val datetimeModify: String?,
+
+    @OneToMany(cascade = [CascadeType.MERGE], mappedBy = "order", fetch = FetchType.EAGER)
+    override val orderItems: Set<OrderItemEntity>,
 ) : Order {
 
     override fun equals(other: Any?): Boolean {
@@ -36,11 +45,12 @@ class OrderEntity(
 }
 
 fun OrderEntity.toData() = OrderData(
-    id, serviceItemPoint, description, clientCount,
-    purchased, datetimeCreate, datetimeModify
+    id, user, serviceItemPoint, description, clientCount,
+    purchased, datetimeCreate, datetimeModify, orderItems
 )
 
+@Suppress("UNCHECKED_CAST")
 fun OrderData.toEntity() = OrderEntity(
-    id, serviceItemPoint, description,
-    clientCount, purchased, datetimeCreate, datetimeModify
+    id, serviceItemPoint as ServiceItemPointEntity?, user as UserEntity?, description,
+    clientCount, purchased, datetimeCreate, datetimeModify, orderItems as Set<OrderItemEntity>
 )

@@ -1,4 +1,4 @@
-package io.github.tuguzd.restaurantapp.backend.controller
+package io.github.tuguzd.restaurantapp.backend.controller.util
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken
@@ -6,7 +6,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse
 import com.google.api.client.http.HttpTransport
 import com.google.api.client.json.JsonFactory
 import io.github.tuguzd.restaurantapp.backend.ApplicationConfiguration
-import io.github.tuguzd.restaurantapp.backend.controller.exception.UserAlreadyExistsException
+import io.github.tuguzd.restaurantapp.backend.controller.util.exception.UserAlreadyExistsException
 import io.github.tuguzd.restaurantapp.backend.model.role_access_control.user.google_user.GoogleUserData
 import io.github.tuguzd.restaurantapp.backend.model.role_access_control.user.password_user.UserNamePasswordData
 import io.github.tuguzd.restaurantapp.backend.security.JwtUtils
@@ -95,6 +95,7 @@ class AuthController(
             description = null,
             datetimeCreate = null,
             datetimeModify = null,
+            orders = setOf(),
         )
         userNamePasswordService.save(registeredUser)
 
@@ -141,6 +142,7 @@ class AuthController(
             description = null,
             datetimeCreate = null,
             datetimeModify = null,
+            orders = setOf(),
         )
         googleUserService.save(entity)
         logger.info { "Google user $name successfully authorized" }

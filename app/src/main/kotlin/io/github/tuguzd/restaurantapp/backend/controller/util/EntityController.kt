@@ -1,0 +1,82 @@
+package io.github.tuguzd.restaurantapp.backend.controller.util
+
+import io.github.tuguzd.restaurantapp.domain.model.util.Identifiable
+import io.github.tuguzd.restaurantapp.domain.repository.util.RepositoryService
+import mu.KotlinLogging
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
+
+abstract class EntityController<I : Any, T : Identifiable<I>> : RepositoryService<I, T> {
+    companion object {
+        private val logger = KotlinLogging.logger {}
+    }
+    protected abstract val service: RepositoryService<I, T>
+
+    override suspend fun readAll(): List<T> = service.readAll()
+
+    @GetMapping("all")
+    suspend fun readAllApi(): List<T> {
+        logger.info { "Requested all items from ${service::class.simpleName}" }
+        return readAll()
+    }
+
+    override suspend fun readById(id: I): T? = service.readById(id)
+
+    @GetMapping("id/{id}")
+    suspend fun readByIdApi(
+        @PathVariable
+        id: I
+    ): ResponseEntity<T> {
+        logger.info { "Requested item from ${service::class.simpleName} with ID $id" }
+        val item = readById(id)
+        if (item == null) {
+            logger.info {
+                "Item from ${service::class.simpleName} " +
+                    "with ID $id not found"
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
+        }
+        logger.info { "Found item from ${service::class.simpleName} with ID $id" }
+        return ResponseEntity.ok(item)
+    }
+
+    override suspend fun save(item: T): T = service.save(item)
+
+    @PostMapping("save")
+    suspend fun saveApi(
+        @RequestBody item: T
+    ): T {
+        val savedItem = save(item)
+        logger.info {
+            "Saved item from ${service::class.simpleName} " +
+                "with ID ${savedItem.id}"
+        }
+        return savedItem
+    }
+
+    override suspend fun delete(id: I) = service.delete(id)
+
+    @DeleteMapping("delete/{id}")
+    suspend fun deleteApi(
+        @PathVariable
+        id: I
+    ) {
+        logger.info {
+            "Requested deletion of item from " +
+                "${service::class.simpleName} with ID $id"
+        }
+        return delete(id)
+    }
+
+    override suspend fun clear() = service.clear()
+
+    @DeleteMapping("clear")
+    suspend fun clearApi() {
+        logger.info {
+            "Requested deletion of all items " +
+                "from ${service::class.simpleName}"
+        }
+        return clear()
+    }
+}

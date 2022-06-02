@@ -1,4 +1,4 @@
-package io.github.tuguzd.restaurantapp.backend.controller.exception
+package io.github.tuguzd.restaurantapp.backend.controller.util.exception
 
 import mu.KotlinLogging
 import org.springframework.http.HttpHeaders

@@ -1,18 +1,19 @@
 package io.github.tuguzd.restaurantapp.backend.model.organization
 
-import io.github.tuguzd.restaurantapp.domain.model.organization.service_item.ServiceItem
+import io.github.tuguzd.restaurantapp.backend.model.client_work.OrderEntity
 import io.github.tuguzd.restaurantapp.domain.model.organization.service_item_point.ServiceItemPoint
 import io.github.tuguzd.restaurantapp.domain.model.organization.service_item_point.ServiceItemPointData
 import org.springframework.data.util.ProxyUtils
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity
 @Table(name = "\"service_item_point\"")
 class ServiceItemPointEntity(
     @Id override val id: String,
-    override val serviceItem: ServiceItem?,
+
+    @ManyToOne(cascade = [CascadeType.MERGE], fetch = FetchType.EAGER)
+    @JoinColumn(name = "service_item_id", referencedColumnName = "id")
+    override val serviceItem: ServiceItemEntity?,
 
     override val name: String,
 
@@ -24,6 +25,9 @@ class ServiceItemPointEntity(
 
     override val datetimeCreate: String?,
     override val datetimeModify: String?,
+
+    @OneToMany(cascade = [CascadeType.MERGE], mappedBy = "serviceItemPoint", fetch = FetchType.EAGER)
+    override val orders: Set<OrderEntity>,
 ) : ServiceItemPoint {
 
     override fun equals(other: Any?): Boolean {
@@ -40,10 +44,11 @@ class ServiceItemPointEntity(
 
 fun ServiceItemPointEntity.toData() = ServiceItemPointData(
     id, serviceItem, name, description, availability,
-    clientMaxCount, imageUri, datetimeCreate, datetimeModify
+    clientMaxCount, imageUri, datetimeCreate, datetimeModify, orders
 )
 
+@Suppress("UNCHECKED_CAST")
 fun ServiceItemPointData.toEntity() = ServiceItemPointEntity(
-    id, serviceItem, name, availability, clientMaxCount,
-    imageUri, description, datetimeCreate, datetimeModify
+    id, serviceItem as ServiceItemEntity?, name, availability, clientMaxCount,
+    imageUri, description, datetimeCreate, datetimeModify, orders as Set<OrderEntity>
 )

@@ -1,5 +1,6 @@
 package io.github.tuguzd.restaurantapp.backend.model.role_access_control.user
 
+import io.github.tuguzd.restaurantapp.backend.model.client_work.OrderEntity
 import io.github.tuguzd.restaurantapp.domain.model.role_access_control.user.User
 import io.github.tuguzd.restaurantapp.domain.model.role_access_control.user.UserData
 import io.github.tuguzd.restaurantapp.domain.model.role_access_control.user.UserType
@@ -22,6 +23,9 @@ open class UserEntity(
 
     override val datetimeCreate: String?,
     override val datetimeModify: String?,
+
+    @OneToMany(cascade = [CascadeType.MERGE], mappedBy = "user", fetch = FetchType.EAGER)
+    override val orders: Set<OrderEntity>,
 ) : User {
 
     override fun equals(other: Any?): Boolean {
@@ -38,10 +42,11 @@ open class UserEntity(
 
 fun UserEntity.toData() = UserData(
     id, type, email, username, imageUri,
-    description, datetimeCreate, datetimeModify
+    description, datetimeCreate, datetimeModify, orders
 )
 
+@Suppress("UNCHECKED_CAST")
 fun UserData.toEntity() = UserEntity(
-    id, type, email, username, imageUri,
-    description, datetimeCreate, datetimeModify
+    id, type, email, username, imageUri, description,
+    datetimeCreate, datetimeModify, orders as Set<OrderEntity>
 )

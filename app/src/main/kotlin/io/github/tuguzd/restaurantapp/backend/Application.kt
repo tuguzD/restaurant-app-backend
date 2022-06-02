@@ -1,5 +1,6 @@
 package io.github.tuguzd.restaurantapp.backend
 
+import io.github.tuguzd.restaurantapp.backend.di.appModule
 import io.github.tuguzd.restaurantapp.backend.di.networkModule
 import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
@@ -21,10 +22,7 @@ class Application
 fun main(vararg args: String) {
     startKoin {
         slf4jLogger(level = Level.DEBUG)
-        modules(
-//            appModule,
-            networkModule
-        )
+        modules(appModule, networkModule)
     }
     runApplication<Application>(*args)
 }

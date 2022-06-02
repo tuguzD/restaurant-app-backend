@@ -1,13 +1,11 @@
 package io.github.tuguzd.restaurantapp.backend.model.organization
 
-import io.github.tuguzd.restaurantapp.domain.model.organization.service.Service
+import io.github.tuguzd.restaurantapp.backend.model.meal.MenuEntity
 import io.github.tuguzd.restaurantapp.domain.model.organization.service_item.ServiceItem
 import io.github.tuguzd.restaurantapp.domain.model.organization.service_item.ServiceItemData
 import io.github.tuguzd.restaurantapp.domain.model.organization.service_item.ServiceItemType
 import org.springframework.data.util.ProxyUtils
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity
 @Table(name = "\"service_item\"")
@@ -15,7 +13,10 @@ class ServiceItemEntity(
     @Id override val id: String,
 
     override val type: ServiceItemType,
-    override val service: Service?,
+
+    @ManyToOne(cascade = [CascadeType.MERGE], fetch = FetchType.EAGER)
+    @JoinColumn(name = "service_id", referencedColumnName = "id")
+    override val service: ServiceEntity?,
 
     override val name: String,
     override val address: String?,
@@ -25,6 +26,12 @@ class ServiceItemEntity(
 
     override val datetimeCreate: String?,
     override val datetimeModify: String?,
+
+    @OneToMany(cascade = [CascadeType.MERGE], mappedBy = "serviceItem", fetch = FetchType.EAGER)
+    override val menus: Set<MenuEntity>,
+
+    @OneToMany(cascade = [CascadeType.MERGE], mappedBy = "serviceItem", fetch = FetchType.EAGER)
+    override val serviceItemPoints: Set<ServiceItemPointEntity>,
 ) : ServiceItem {
 
     override fun equals(other: Any?): Boolean {
@@ -40,11 +47,13 @@ class ServiceItemEntity(
 }
 
 fun ServiceItemEntity.toData() = ServiceItemData(
-    id, type, service, name, description,
-    address, imageUri, datetimeCreate, datetimeModify
+    id, type, service, name, description, address, imageUri,
+    datetimeCreate, datetimeModify, serviceItemPoints, menus
 )
 
+@Suppress("UNCHECKED_CAST")
 fun ServiceItemData.toEntity() = ServiceItemEntity(
-    id, type, service, name, address, imageUri,
-    description, datetimeCreate, datetimeModify
+    id, type, service as ServiceEntity?, name, address, imageUri,
+    description, datetimeCreate, datetimeModify, menus as Set<MenuEntity>,
+    serviceItemPoints as Set<ServiceItemPointEntity>
 )

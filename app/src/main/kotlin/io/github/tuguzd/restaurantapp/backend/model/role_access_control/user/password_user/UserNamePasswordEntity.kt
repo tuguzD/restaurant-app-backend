@@ -1,13 +1,12 @@
 package io.github.tuguzd.restaurantapp.backend.model.role_access_control.user.password_user
 
+import io.github.tuguzd.restaurantapp.backend.model.client_work.OrderEntity
 import io.github.tuguzd.restaurantapp.backend.model.role_access_control.user.UserEntity
 import io.github.tuguzd.restaurantapp.domain.model.role_access_control.credential.UserCredentials
 import io.github.tuguzd.restaurantapp.domain.model.role_access_control.user.UserType
 import io.github.tuguzd.restaurantapp.domain.util.randomNanoId
 import org.springframework.data.util.ProxyUtils
-import javax.persistence.Entity
-import javax.persistence.PrimaryKeyJoinColumn
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity
 @Table(name = "user_name_password")
@@ -25,7 +24,13 @@ class UserNamePasswordEntity(
 
     override val datetimeCreate: String?,
     override val datetimeModify: String?,
-) : UserEntity(id, type, email, username, description, imageUri, datetimeCreate, datetimeModify), UserCredentials {
+
+    @OneToMany(cascade = [CascadeType.MERGE], mappedBy = "user", fetch = FetchType.EAGER)
+    override val orders: Set<OrderEntity>,
+) : UserEntity(
+    id, type, email, username, description, imageUri, datetimeCreate, datetimeModify, orders
+),
+    UserCredentials {
 
     override fun equals(other: Any?): Boolean {
         other ?: return false
@@ -41,10 +46,11 @@ class UserNamePasswordEntity(
 
 fun UserNamePasswordEntity.toPasswordData() = UserNamePasswordData(
     id, type, email, username, password, imageUri,
-    description, datetimeCreate, datetimeModify
+    description, datetimeCreate, datetimeModify, orders
 )
 
+@Suppress("UNCHECKED_CAST")
 fun UserNamePasswordData.toPasswordEntity() = UserNamePasswordEntity(
-    id, type, email, username, password, imageUri,
-    description, datetimeCreate, datetimeModify
+    id, type, email, username, password, imageUri, description,
+    datetimeCreate, datetimeModify, orders as Set<OrderEntity>
 )

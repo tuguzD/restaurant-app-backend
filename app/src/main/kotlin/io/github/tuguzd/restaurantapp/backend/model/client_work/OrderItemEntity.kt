@@ -1,20 +1,23 @@
 package io.github.tuguzd.restaurantapp.backend.model.client_work
 
-import io.github.tuguzd.restaurantapp.domain.model.client_work.order.Order
+import io.github.tuguzd.restaurantapp.backend.model.meal.MenuItemEntity
 import io.github.tuguzd.restaurantapp.domain.model.client_work.order_item.OrderItem
 import io.github.tuguzd.restaurantapp.domain.model.client_work.order_item.OrderItemData
-import io.github.tuguzd.restaurantapp.domain.model.meal.menu_item.MenuItem
 import org.springframework.data.util.ProxyUtils
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity
 @Table(name = "\"order_item\"")
 class OrderItemEntity(
     @Id override val id: String,
-    override val order: Order,
-    override val menuItem: MenuItem,
+
+    @ManyToOne(cascade = [CascadeType.MERGE], fetch = FetchType.EAGER)
+    @JoinColumn(name = "order_id", referencedColumnName = "id")
+    override val order: OrderEntity,
+
+    @ManyToOne(cascade = [CascadeType.MERGE], fetch = FetchType.EAGER)
+    @JoinColumn(name = "menu_item_id", referencedColumnName = "id")
+    override val menuItem: MenuItemEntity,
 
     override val itemCount: Int,
     override val description: String?,
@@ -41,6 +44,6 @@ fun OrderItemEntity.toData() = OrderItemData(
 )
 
 fun OrderItemData.toEntity() = OrderItemEntity(
-    id, order, menuItem, itemCount,
-    description, datetimeCreate, datetimeModify
+    id, order as OrderEntity, menuItem as MenuItemEntity,
+    itemCount, description, datetimeCreate, datetimeModify
 )

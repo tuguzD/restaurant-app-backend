@@ -1,4 +1,4 @@
-package io.github.tuguzd.restaurantapp.backend.controller
+package io.github.tuguzd.restaurantapp.backend.controller.role_access_control.user
 
 import io.github.tuguzd.restaurantapp.backend.security.JwtUtils
 import io.github.tuguzd.restaurantapp.backend.service.role_access_control.user.UserService
