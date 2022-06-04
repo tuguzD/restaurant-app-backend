@@ -1,17 +1,17 @@
 package io.github.tuguzd.restaurantapp.backend.controller.util
 
 import io.github.tuguzd.restaurantapp.domain.model.util.Identifiable
-import io.github.tuguzd.restaurantapp.domain.repository.util.RepositoryService
+import io.github.tuguzd.restaurantapp.domain.repository.util.CrudRepositoryService
 import mu.KotlinLogging
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
-abstract class EntityController<I : Any, T : Identifiable<I>> : RepositoryService<I, T> {
+abstract class EntityController<I, T : Identifiable<I>> : CrudRepositoryService<I, T> {
     companion object {
-        private val logger = KotlinLogging.logger {}
+        val logger = KotlinLogging.logger {}
     }
-    protected abstract val service: RepositoryService<I, T>
+    protected abstract val service: CrudRepositoryService<I, T>
 
     override suspend fun readAll(): List<T> = service.readAll()
 
@@ -46,13 +46,13 @@ abstract class EntityController<I : Any, T : Identifiable<I>> : RepositoryServic
     @PostMapping("save")
     suspend fun saveApi(
         @RequestBody item: T
-    ): T {
+    ): ResponseEntity<T> {
         val savedItem = save(item)
         logger.info {
             "Saved item from ${service::class.simpleName} " +
                 "with ID ${savedItem.id}"
         }
-        return savedItem
+        return ResponseEntity.ok(savedItem)
     }
 
     override suspend fun delete(id: I) = service.delete(id)

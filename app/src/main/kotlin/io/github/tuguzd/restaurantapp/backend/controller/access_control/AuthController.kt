@@ -1,4 +1,4 @@
-package io.github.tuguzd.restaurantapp.backend.controller.util
+package io.github.tuguzd.restaurantapp.backend.controller.access_control
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken
@@ -7,15 +7,15 @@ import com.google.api.client.http.HttpTransport
 import com.google.api.client.json.JsonFactory
 import io.github.tuguzd.restaurantapp.backend.ApplicationConfiguration
 import io.github.tuguzd.restaurantapp.backend.controller.util.exception.UserAlreadyExistsException
-import io.github.tuguzd.restaurantapp.backend.model.role_access_control.user.google_user.GoogleUserData
-import io.github.tuguzd.restaurantapp.backend.model.role_access_control.user.password_user.UserNamePasswordData
+import io.github.tuguzd.restaurantapp.backend.model.access_control.user.google_user.GoogleUserData
+import io.github.tuguzd.restaurantapp.backend.model.access_control.user.password_user.UserNamePasswordData
 import io.github.tuguzd.restaurantapp.backend.security.JwtUtils
 import io.github.tuguzd.restaurantapp.backend.security.UserDetailsService
-import io.github.tuguzd.restaurantapp.backend.service.role_access_control.user.GoogleUserService
-import io.github.tuguzd.restaurantapp.backend.service.role_access_control.user.UserNamePasswordService
-import io.github.tuguzd.restaurantapp.domain.model.role_access_control.credential.UserCredentialsData
-import io.github.tuguzd.restaurantapp.domain.model.role_access_control.token.UserTokenData
-import io.github.tuguzd.restaurantapp.domain.model.role_access_control.user.UserType
+import io.github.tuguzd.restaurantapp.backend.service.access_control.user.UserGoogleDomainService
+import io.github.tuguzd.restaurantapp.backend.service.access_control.user.UserNamePasswordDomainService
+import io.github.tuguzd.restaurantapp.domain.model.access_control.credential.UserCredentialsData
+import io.github.tuguzd.restaurantapp.domain.model.access_control.token.UserTokenData
+import io.github.tuguzd.restaurantapp.domain.model.access_control.user.UserType
 import io.github.tuguzd.restaurantapp.domain.util.randomNanoId
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -32,6 +32,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
+import java.util.Date
 
 @RestController
 @Tag(name = "Аутентификация", description = "Конечные сетевые точки обращения для аутентификации")
@@ -41,8 +42,8 @@ class AuthController(
     private val passwordEncoder: PasswordEncoder,
     private val jwtUtils: JwtUtils,
     private val userDetailsService: UserDetailsService,
-    private val userNamePasswordService: UserNamePasswordService,
-    private val googleUserService: GoogleUserService,
+    private val userNamePasswordDomainService: UserNamePasswordDomainService,
+    private val userGoogleDomainService: UserGoogleDomainService,
 ) : KoinComponent {
 
     companion object {
@@ -72,7 +73,7 @@ class AuthController(
     }
 
     protected suspend fun checkUserNotExists(credentials: UserCredentialsData) {
-        if (userNamePasswordService.findByUsername(credentials.username) == null) return
+        if (userNamePasswordDomainService.findByUsername(credentials.username) == null) return
         throw UserAlreadyExistsException("User with username ${credentials.username} already exists")
     }
 
@@ -86,18 +87,17 @@ class AuthController(
         checkUserNotExists(credentials)
 
         val registeredUser = UserNamePasswordData(
-            // TODO: Change to "unspecified"
-            type = UserType.Waiter,
+            type = UserType.Client,
             email = null,
             username = credentials.username,
             password = passwordEncoder.encode(credentials.password),
             imageUri = null,
             description = null,
-            datetimeCreate = null,
+            datetimeCreate = Date().toString(),
             datetimeModify = null,
             orders = setOf(),
         )
-        userNamePasswordService.save(registeredUser)
+        userNamePasswordDomainService.save(registeredUser)
 
         val response = auth(credentials)
         logger.info { "User with username ${credentials.username} successfully registered" }
@@ -107,7 +107,7 @@ class AuthController(
     @PostMapping("oauth2/google")
     @Operation(summary = "Google OAuth 2.0", description = "Аутентификация пользователя Google")
     suspend fun googleOAuth2(@RequestBody idToken: UserTokenData): ResponseEntity<UserTokenData> {
-        val idTokenString = idToken.accessToken
+        val idTokenString = idToken.token
 
         val clientSecrets = applicationConfiguration.oauth2.google
         val tokenRequest = GoogleAuthorizationCodeTokenRequest(
@@ -126,25 +126,24 @@ class AuthController(
         val googleId: String = payload.subject
         val name = payload["name"] as String
         val email: String? = payload.email
-        val userId = when (val entityByGoogleId = googleUserService.findByGoogleId(googleId)) {
+        val userId = when (val entityByGoogleId = userGoogleDomainService.findByGoogleId(googleId)) {
             null -> randomNanoId()
             else -> entityByGoogleId.id
         }
         val pictureUrl = payload["picture"] as String?
         val entity = GoogleUserData(
             id = userId,
-            // TODO: Change to "unspecified"
-            type = UserType.Waiter,
+            type = UserType.Client,
             email = email,
             username = name,
             googleId = googleId,
             imageUri = pictureUrl,
             description = null,
-            datetimeCreate = null,
+            datetimeCreate = Date().toString(),
             datetimeModify = null,
             orders = setOf(),
         )
-        googleUserService.save(entity)
+        userGoogleDomainService.save(entity)
         logger.info { "Google user $name successfully authorized" }
 
         val userDetails = userDetailsService.loadUserByUsername(name)

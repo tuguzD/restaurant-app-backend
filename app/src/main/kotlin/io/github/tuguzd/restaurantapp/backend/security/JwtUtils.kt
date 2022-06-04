@@ -1,8 +1,8 @@
 package io.github.tuguzd.restaurantapp.backend.security
 
 import io.github.tuguzd.restaurantapp.backend.ApplicationConfiguration
-import io.github.tuguzd.restaurantapp.domain.model.role_access_control.user.User
-import io.github.tuguzd.restaurantapp.domain.model.role_access_control.user.UserType
+import io.github.tuguzd.restaurantapp.domain.model.access_control.user.User
+import io.github.tuguzd.restaurantapp.domain.model.access_control.user.UserType
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm

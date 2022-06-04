@@ -4,27 +4,29 @@ import io.github.tuguzd.restaurantapp.backend.model.meal.MenuEntity
 import io.github.tuguzd.restaurantapp.domain.model.organization.service_item.ServiceItem
 import io.github.tuguzd.restaurantapp.domain.model.organization.service_item.ServiceItemData
 import io.github.tuguzd.restaurantapp.domain.model.organization.service_item.ServiceItemType
+import io.github.tuguzd.restaurantapp.domain.model.util.NanoId
+import io.github.tuguzd.restaurantapp.domain.util.randomNanoId
 import org.springframework.data.util.ProxyUtils
 import javax.persistence.*
 
 @Entity
 @Table(name = "\"service_item\"")
 class ServiceItemEntity(
-    @Id override val id: String,
+    @Id override val id: NanoId = randomNanoId(),
 
     override val type: ServiceItemType,
 
     @ManyToOne(cascade = [CascadeType.MERGE], fetch = FetchType.EAGER)
     @JoinColumn(name = "service_id", referencedColumnName = "id")
-    override val service: ServiceEntity?,
+    override val service: ServiceEntity,
 
     override val name: String,
-    override val address: String?,
+    override val address: String,
 
     override val imageUri: String?,
     override val description: String?,
 
-    override val datetimeCreate: String?,
+    override val datetimeCreate: String,
     override val datetimeModify: String?,
 
     @OneToMany(cascade = [CascadeType.MERGE], mappedBy = "serviceItem", fetch = FetchType.EAGER)
@@ -47,13 +49,13 @@ class ServiceItemEntity(
 }
 
 fun ServiceItemEntity.toData() = ServiceItemData(
-    id, type, service, name, description, address, imageUri,
-    datetimeCreate, datetimeModify, serviceItemPoints, menus
+    id, service, type, name, address, imageUri, description,
+    datetimeCreate, datetimeModify, serviceItemPoints, menus,
 )
 
 @Suppress("UNCHECKED_CAST")
 fun ServiceItemData.toEntity() = ServiceItemEntity(
-    id, type, service as ServiceEntity?, name, address, imageUri,
+    id, type, service as ServiceEntity, name, address, imageUri,
     description, datetimeCreate, datetimeModify, menus as Set<MenuEntity>,
-    serviceItemPoints as Set<ServiceItemPointEntity>
+    serviceItemPoints as Set<ServiceItemPointEntity>,
 )

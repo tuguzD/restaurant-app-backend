@@ -1,8 +1,9 @@
-package io.github.tuguzd.restaurantapp.backend.model.role_access_control.user.google_user
+package io.github.tuguzd.restaurantapp.backend.model.access_control.user.google_user
 
+import io.github.tuguzd.restaurantapp.backend.model.access_control.user.UserEntity
 import io.github.tuguzd.restaurantapp.backend.model.client_work.OrderEntity
-import io.github.tuguzd.restaurantapp.backend.model.role_access_control.user.UserEntity
-import io.github.tuguzd.restaurantapp.domain.model.role_access_control.user.UserType
+import io.github.tuguzd.restaurantapp.domain.model.access_control.user.UserType
+import io.github.tuguzd.restaurantapp.domain.model.util.NanoId
 import io.github.tuguzd.restaurantapp.domain.util.randomNanoId
 import org.springframework.data.util.ProxyUtils
 import javax.persistence.*
@@ -11,7 +12,7 @@ import javax.persistence.*
 @Table(name = "user_google")
 @PrimaryKeyJoinColumn(name = "user_id")
 class GoogleUserEntity(
-    override val id: String = randomNanoId(),
+    override val id: NanoId = randomNanoId(),
     override val type: UserType,
 
     override val email: String?,
@@ -21,7 +22,7 @@ class GoogleUserEntity(
     override val imageUri: String?,
     override val description: String?,
 
-    override val datetimeCreate: String?,
+    override val datetimeCreate: String,
     override val datetimeModify: String?,
 
     @OneToMany(cascade = [CascadeType.MERGE], mappedBy = "user", fetch = FetchType.EAGER)
@@ -44,11 +45,11 @@ class GoogleUserEntity(
 
 fun GoogleUserEntity.toGoogleData() = GoogleUserData(
     id, type, email, username, googleId, imageUri,
-    description, datetimeCreate, datetimeModify, orders
+    description, datetimeCreate, datetimeModify, orders,
 )
 
 @Suppress("UNCHECKED_CAST")
 fun GoogleUserData.toGoogleEntity() = GoogleUserEntity(
     id, type, email, username, googleId, imageUri, description,
-    datetimeCreate, datetimeModify, orders as Set<OrderEntity>
+    datetimeCreate, datetimeModify, orders as Set<OrderEntity>,
 )

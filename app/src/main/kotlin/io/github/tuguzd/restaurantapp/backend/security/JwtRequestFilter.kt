@@ -1,6 +1,6 @@
 package io.github.tuguzd.restaurantapp.backend.security
 
-import io.github.tuguzd.restaurantapp.domain.model.role_access_control.user.UserType
+import io.github.tuguzd.restaurantapp.domain.model.access_control.user.UserType
 import org.springframework.http.HttpHeaders
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.authority.SimpleGrantedAuthority

@@ -4,23 +4,25 @@ import io.github.tuguzd.restaurantapp.backend.model.client_work.OrderItemEntity
 import io.github.tuguzd.restaurantapp.domain.model.meal.menu_item.MenuItem
 import io.github.tuguzd.restaurantapp.domain.model.meal.menu_item.MenuItemData
 import io.github.tuguzd.restaurantapp.domain.model.meal.menu_item.MenuItemType
+import io.github.tuguzd.restaurantapp.domain.model.util.NanoId
+import io.github.tuguzd.restaurantapp.domain.util.randomNanoId
 import org.springframework.data.util.ProxyUtils
 import javax.persistence.*
 
 @Entity
 @Table(name = "\"menu_item\"")
 class MenuItemEntity(
-    @Id override val id: String,
+    @Id override val id: NanoId = randomNanoId(),
     override val type: MenuItemType,
 
     @ManyToOne(cascade = [CascadeType.MERGE], fetch = FetchType.EAGER)
     @JoinColumn(name = "menu_id", referencedColumnName = "id")
-    override val menu: MenuEntity?,
+    override val menu: MenuEntity,
 
     override val imageUri: String?,
     override val description: String?,
 
-    override val datetimeCreate: String?,
+    override val datetimeCreate: String,
     override val datetimeModify: String?,
 
     @OneToMany(cascade = [CascadeType.MERGE], mappedBy = "menuItem", fetch = FetchType.EAGER)
@@ -40,12 +42,12 @@ class MenuItemEntity(
 }
 
 fun MenuItemEntity.toData() = MenuItemData(
-    id, type, menu, description, imageUri,
-    datetimeCreate, datetimeModify, orderItems
+    id, type, menu, imageUri, description,
+    datetimeCreate, datetimeModify, orderItems,
 )
 
 @Suppress("UNCHECKED_CAST")
 fun MenuItemData.toEntity() = MenuItemEntity(
-    id, type, menu as MenuEntity?, imageUri, description,
-    datetimeCreate, datetimeModify, orderItems as Set<OrderItemEntity>
+    id, type, menu as MenuEntity, imageUri, description,
+    datetimeCreate, datetimeModify, orderItems as Set<OrderItemEntity>,
 )

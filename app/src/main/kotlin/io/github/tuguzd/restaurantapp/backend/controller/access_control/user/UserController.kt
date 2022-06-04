@@ -1,8 +1,9 @@
-package io.github.tuguzd.restaurantapp.backend.controller.role_access_control.user
+package io.github.tuguzd.restaurantapp.backend.controller.access_control.user
 
 import io.github.tuguzd.restaurantapp.backend.security.JwtUtils
-import io.github.tuguzd.restaurantapp.backend.service.role_access_control.user.UserService
-import io.github.tuguzd.restaurantapp.domain.model.role_access_control.user.UserData
+import io.github.tuguzd.restaurantapp.backend.service.access_control.user.UserDomainService
+import io.github.tuguzd.restaurantapp.domain.model.access_control.user.UserData
+import io.github.tuguzd.restaurantapp.domain.model.util.NanoId
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.*
 @Tag(name = "Пользователи", description = "Конечные сетевые точки обращения пользовательских данных")
 class UserController(
     private val jwtUtils: JwtUtils,
-    private val userService: UserService,
+    private val service: UserDomainService,
 ) {
     companion object {
         private val logger = KotlinLogging.logger {}
@@ -27,7 +28,7 @@ class UserController(
     @Operation(summary = "Все пользователи", description = "Получение данных обо всех пользователях системы")
     suspend fun allUsers(): List<UserData> {
         logger.info { "Requested all users" }
-        return userService.readAll()
+        return service.readAll()
     }
 
     @GetMapping("current")
@@ -40,18 +41,18 @@ class UserController(
         val accessToken = bearer.substringAfter("Bearer ")
 
         val username = jwtUtils.extractUsername(accessToken)
-        return findByUsername(username)
+        return readByUsername(username)
     }
 
     @GetMapping("id/{id}")
     @Operation(summary = "Поиск по ID", description = "Поиск пользователя в системе по его идентификатору")
-    suspend fun findById(
+    suspend fun readById(
         @PathVariable
         @Parameter(name = "Идентификатор пользователя")
-        id: String,
+        id: NanoId,
     ): ResponseEntity<UserData> {
         logger.info { "Requested user with ID $id" }
-        val user = userService.readById(id)
+        val user = service.readById(id)
         if (user == null) {
             logger.info { "User with ID $id not found" }
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
@@ -65,13 +66,13 @@ class UserController(
         summary = "Поиск по имени пользователя",
         description = "Поиск пользователя в системе по его имени пользователя",
     )
-    suspend fun findByUsername(
+    suspend fun readByUsername(
         @PathVariable
         @Parameter(name = "Имя пользователя")
         username: String,
     ): ResponseEntity<UserData> {
         logger.info { "Requested user with username $username" }
-        val user = userService.findByUsername(username)
+        val user = service.readByUsername(username)
         if (user == null) {
             logger.info { "User with username $username not found" }
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build()

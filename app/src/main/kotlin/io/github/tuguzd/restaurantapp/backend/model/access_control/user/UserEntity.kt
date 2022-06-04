@@ -1,9 +1,10 @@
-package io.github.tuguzd.restaurantapp.backend.model.role_access_control.user
+package io.github.tuguzd.restaurantapp.backend.model.access_control.user
 
 import io.github.tuguzd.restaurantapp.backend.model.client_work.OrderEntity
-import io.github.tuguzd.restaurantapp.domain.model.role_access_control.user.User
-import io.github.tuguzd.restaurantapp.domain.model.role_access_control.user.UserData
-import io.github.tuguzd.restaurantapp.domain.model.role_access_control.user.UserType
+import io.github.tuguzd.restaurantapp.domain.model.access_control.user.User
+import io.github.tuguzd.restaurantapp.domain.model.access_control.user.UserData
+import io.github.tuguzd.restaurantapp.domain.model.access_control.user.UserType
+import io.github.tuguzd.restaurantapp.domain.model.util.NanoId
 import io.github.tuguzd.restaurantapp.domain.util.randomNanoId
 import org.springframework.data.util.ProxyUtils
 import javax.persistence.*
@@ -12,7 +13,7 @@ import javax.persistence.*
 @Table(name = "\"user\"")
 @Inheritance(strategy = InheritanceType.JOINED)
 open class UserEntity(
-    @Id override val id: String = randomNanoId(),
+    @Id override val id: NanoId = randomNanoId(),
     override val type: UserType,
 
     override val email: String?,
@@ -21,7 +22,7 @@ open class UserEntity(
     override val imageUri: String?,
     override val description: String?,
 
-    override val datetimeCreate: String?,
+    override val datetimeCreate: String,
     override val datetimeModify: String?,
 
     @OneToMany(cascade = [CascadeType.MERGE], mappedBy = "user", fetch = FetchType.EAGER)
@@ -42,11 +43,11 @@ open class UserEntity(
 
 fun UserEntity.toData() = UserData(
     id, type, email, username, imageUri,
-    description, datetimeCreate, datetimeModify, orders
+    description, datetimeCreate, datetimeModify, orders,
 )
 
 @Suppress("UNCHECKED_CAST")
 fun UserData.toEntity() = UserEntity(
     id, type, email, username, imageUri, description,
-    datetimeCreate, datetimeModify, orders as Set<OrderEntity>
+    datetimeCreate, datetimeModify, orders as Set<OrderEntity>,
 )
