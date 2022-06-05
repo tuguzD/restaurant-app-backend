@@ -1,11 +1,12 @@
 package io.github.tuguzd.restaurantapp.backend.model.organization
 
-import io.github.tuguzd.restaurantapp.backend.model.client_work.OrderEntity
+import io.github.tuguzd.restaurantapp.backend.model.access_control.user.UserEntity
 import io.github.tuguzd.restaurantapp.domain.model.organization.service_item_point.ServiceItemPoint
 import io.github.tuguzd.restaurantapp.domain.model.organization.service_item_point.ServiceItemPointData
 import io.github.tuguzd.restaurantapp.domain.model.util.NanoId
 import io.github.tuguzd.restaurantapp.domain.util.randomNanoId
 import org.springframework.data.util.ProxyUtils
+import java.util.Date
 import javax.persistence.*
 
 @Entity
@@ -13,7 +14,11 @@ import javax.persistence.*
 class ServiceItemPointEntity(
     @Id override val id: NanoId = randomNanoId(),
 
-    @ManyToOne(cascade = [CascadeType.MERGE], fetch = FetchType.EAGER)
+    @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    @JoinColumn(name = "creator_id", referencedColumnName = "id")
+    override val creator: UserEntity,
+
+    @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     @JoinColumn(name = "service_item_id", referencedColumnName = "id")
     override val serviceItem: ServiceItemEntity,
 
@@ -25,11 +30,8 @@ class ServiceItemPointEntity(
     override val imageUri: String?,
     override val description: String?,
 
-    override val datetimeCreate: String,
-    override val datetimeModify: String?,
-
-    @OneToMany(cascade = [CascadeType.MERGE], mappedBy = "serviceItemPoint", fetch = FetchType.EAGER)
-    override val orders: Set<OrderEntity>,
+    override val datetimeCreate: String = Date().toString(),
+    override val datetimeModify: String? = null,
 ) : ServiceItemPoint {
 
     override fun equals(other: Any?): Boolean {
@@ -45,12 +47,11 @@ class ServiceItemPointEntity(
 }
 
 fun ServiceItemPointEntity.toData() = ServiceItemPointData(
-    id, serviceItem, name, availability, clientMaxCount,
-    imageUri, description, datetimeCreate, datetimeModify, orders,
+    id, creator, serviceItem, name, availability, clientMaxCount,
+    imageUri, description, datetimeCreate, datetimeModify,
 )
 
-@Suppress("UNCHECKED_CAST")
 fun ServiceItemPointData.toEntity() = ServiceItemPointEntity(
-    id, serviceItem as ServiceItemEntity, name, availability, clientMaxCount,
-    imageUri, description, datetimeCreate, datetimeModify, orders as Set<OrderEntity>,
+    id, creator as UserEntity, serviceItem as ServiceItemEntity, name, availability,
+    clientMaxCount, imageUri, description, datetimeCreate, datetimeModify,
 )

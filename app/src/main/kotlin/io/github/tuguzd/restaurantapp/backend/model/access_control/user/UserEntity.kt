@@ -1,12 +1,13 @@
 package io.github.tuguzd.restaurantapp.backend.model.access_control.user
 
-import io.github.tuguzd.restaurantapp.backend.model.client_work.OrderEntity
+import io.github.tuguzd.restaurantapp.backend.model.organization.ServiceItemEntity
 import io.github.tuguzd.restaurantapp.domain.model.access_control.user.User
 import io.github.tuguzd.restaurantapp.domain.model.access_control.user.UserData
 import io.github.tuguzd.restaurantapp.domain.model.access_control.user.UserType
 import io.github.tuguzd.restaurantapp.domain.model.util.NanoId
 import io.github.tuguzd.restaurantapp.domain.util.randomNanoId
 import org.springframework.data.util.ProxyUtils
+import java.util.*
 import javax.persistence.*
 
 @Entity
@@ -16,17 +17,18 @@ open class UserEntity(
     @Id override val id: NanoId = randomNanoId(),
     override val type: UserType,
 
+    @ManyToOne(cascade = [CascadeType.MERGE], fetch = FetchType.EAGER)
+    @JoinColumn(name = "service_item_id", referencedColumnName = "id")
+    override val serviceItem: ServiceItemEntity?,
+
     override val email: String?,
-    override val username: String,
+    @Column(unique = true) override val username: String,
 
     override val imageUri: String?,
     override val description: String?,
 
-    override val datetimeCreate: String,
-    override val datetimeModify: String?,
-
-    @OneToMany(cascade = [CascadeType.MERGE], mappedBy = "user", fetch = FetchType.EAGER)
-    override val orders: Set<OrderEntity>,
+    override val datetimeCreate: String = Date().toString(),
+    override val datetimeModify: String? = null,
 ) : User {
 
     override fun equals(other: Any?): Boolean {
@@ -42,12 +44,11 @@ open class UserEntity(
 }
 
 fun UserEntity.toData() = UserData(
-    id, type, email, username, imageUri,
-    description, datetimeCreate, datetimeModify, orders,
+    id, type, serviceItem, email, username, imageUri,
+    description, datetimeCreate, datetimeModify,
 )
 
-@Suppress("UNCHECKED_CAST")
 fun UserData.toEntity() = UserEntity(
-    id, type, email, username, imageUri, description,
-    datetimeCreate, datetimeModify, orders as Set<OrderEntity>,
+    id, type, serviceItem as ServiceItemEntity?, email, username,
+    imageUri, description, datetimeCreate, datetimeModify,
 )

@@ -1,26 +1,30 @@
 package io.github.tuguzd.restaurantapp.backend.model.organization
 
+import io.github.tuguzd.restaurantapp.backend.model.access_control.user.UserEntity
 import io.github.tuguzd.restaurantapp.domain.model.organization.service.Service
 import io.github.tuguzd.restaurantapp.domain.model.organization.service.ServiceData
 import io.github.tuguzd.restaurantapp.domain.model.util.NanoId
 import io.github.tuguzd.restaurantapp.domain.util.randomNanoId
 import org.springframework.data.util.ProxyUtils
+import java.util.Date
 import javax.persistence.*
 
 @Entity
 @Table(name = "\"service\"")
 class ServiceEntity(
     @Id override val id: NanoId = randomNanoId(),
-    override val name: String,
+
+    @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    @JoinColumn(name = "creator_id", referencedColumnName = "id")
+    override val creator: UserEntity,
+
+    @Column(unique = true) override val name: String,
 
     override val imageUri: String?,
     override val description: String?,
 
-    override val datetimeCreate: String,
-    override val datetimeModify: String?,
-
-    @OneToMany(cascade = [CascadeType.MERGE], mappedBy = "service", fetch = FetchType.EAGER)
-    override val serviceItems: Set<ServiceItemEntity>,
+    override val datetimeCreate: String = Date().toString(),
+    override val datetimeModify: String? = null,
 ) : Service {
 
     override fun equals(other: Any?): Boolean {
@@ -36,12 +40,11 @@ class ServiceEntity(
 }
 
 fun ServiceEntity.toData() = ServiceData(
-    id, name, imageUri, description,
-    datetimeCreate, datetimeModify, serviceItems,
+    id, creator, name, imageUri,
+    description, datetimeCreate, datetimeModify,
 )
 
-@Suppress("UNCHECKED_CAST")
 fun ServiceData.toEntity() = ServiceEntity(
-    id, name, imageUri, description, datetimeCreate,
-    datetimeModify, serviceItems as Set<ServiceItemEntity>,
+    id, creator as UserEntity, name,
+    imageUri, description, datetimeCreate, datetimeModify,
 )

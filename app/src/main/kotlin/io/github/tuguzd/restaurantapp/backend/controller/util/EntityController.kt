@@ -1,6 +1,6 @@
 package io.github.tuguzd.restaurantapp.backend.controller.util
 
-import io.github.tuguzd.restaurantapp.domain.model.util.Identifiable
+import io.github.tuguzd.restaurantapp.domain.model.util.feature.Identifiable
 import io.github.tuguzd.restaurantapp.domain.repository.util.CrudRepositoryService
 import mu.KotlinLogging
 import org.springframework.http.HttpStatus

@@ -6,6 +6,7 @@ import io.github.tuguzd.restaurantapp.domain.model.client_work.order_item.OrderI
 import io.github.tuguzd.restaurantapp.domain.model.util.NanoId
 import io.github.tuguzd.restaurantapp.domain.util.randomNanoId
 import org.springframework.data.util.ProxyUtils
+import java.util.Date
 import javax.persistence.*
 
 @Entity
@@ -13,19 +14,19 @@ import javax.persistence.*
 class OrderItemEntity(
     @Id override val id: NanoId = randomNanoId(),
 
-    @ManyToOne(cascade = [CascadeType.MERGE], fetch = FetchType.EAGER)
+    @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     override val order: OrderEntity,
 
-    @ManyToOne(cascade = [CascadeType.MERGE], fetch = FetchType.EAGER)
+    @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     @JoinColumn(name = "menu_item_id", referencedColumnName = "id")
     override val menuItem: MenuItemEntity,
 
     override val itemCount: Int,
     override val description: String?,
 
-    override val datetimeCreate: String,
-    override val datetimeModify: String?,
+    override val datetimeCreate: String = Date().toString(),
+    override val datetimeModify: String? = null,
 ) : OrderItem {
 
     override fun equals(other: Any?): Boolean {

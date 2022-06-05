@@ -1,5 +1,6 @@
 package io.github.tuguzd.restaurantapp.backend.model.meal
 
+import io.github.tuguzd.restaurantapp.backend.model.access_control.user.UserEntity
 import io.github.tuguzd.restaurantapp.backend.model.organization.ServiceItemEntity
 import io.github.tuguzd.restaurantapp.domain.model.meal.menu.Menu
 import io.github.tuguzd.restaurantapp.domain.model.meal.menu.MenuData
@@ -7,6 +8,7 @@ import io.github.tuguzd.restaurantapp.domain.model.meal.menu.MenuType
 import io.github.tuguzd.restaurantapp.domain.model.util.NanoId
 import io.github.tuguzd.restaurantapp.domain.util.randomNanoId
 import org.springframework.data.util.ProxyUtils
+import java.util.Date
 import javax.persistence.*
 
 @Entity
@@ -15,7 +17,11 @@ class MenuEntity(
     @Id override val id: NanoId = randomNanoId(),
     override val type: MenuType,
 
-    @ManyToOne(cascade = [CascadeType.MERGE], fetch = FetchType.EAGER)
+    @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    @JoinColumn(name = "creator_id", referencedColumnName = "id")
+    override val creator: UserEntity,
+
+    @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     @JoinColumn(name = "service_item_id", referencedColumnName = "id")
     override val serviceItem: ServiceItemEntity,
 
@@ -24,11 +30,8 @@ class MenuEntity(
     override val imageUri: String?,
     override val description: String?,
 
-    override val datetimeCreate: String,
-    override val datetimeModify: String?,
-
-    @OneToMany(cascade = [CascadeType.MERGE], mappedBy = "menu", fetch = FetchType.EAGER)
-    override val menuItems: Set<MenuItemEntity>,
+    override val datetimeCreate: String = Date().toString(),
+    override val datetimeModify: String? = null,
 ) : Menu {
 
     override fun equals(other: Any?): Boolean {
@@ -44,12 +47,11 @@ class MenuEntity(
 }
 
 fun MenuEntity.toData() = MenuData(
-    id, type, serviceItem, name, imageUri,
-    description, datetimeCreate, datetimeModify, menuItems,
+    id, type, creator, serviceItem, name, imageUri,
+    description, datetimeCreate, datetimeModify,
 )
 
-@Suppress("UNCHECKED_CAST")
 fun MenuData.toEntity() = MenuEntity(
-    id, type, serviceItem as ServiceItemEntity, name, imageUri, description,
-    datetimeCreate, datetimeModify, menuItems as Set<MenuItemEntity>,
+    id, type, creator as UserEntity, serviceItem as ServiceItemEntity,
+    name, imageUri, description, datetimeCreate, datetimeModify,
 )

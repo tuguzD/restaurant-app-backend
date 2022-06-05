@@ -87,15 +87,11 @@ class AuthController(
         checkUserNotExists(credentials)
 
         val registeredUser = UserNamePasswordData(
-            type = UserType.Client,
-            email = null,
-            username = credentials.username,
+            type = UserType.Client, serviceItem = null,
+            email = null, username = credentials.username,
             password = passwordEncoder.encode(credentials.password),
-            imageUri = null,
-            description = null,
-            datetimeCreate = Date().toString(),
-            datetimeModify = null,
-            orders = setOf(),
+            imageUri = null, description = null,
+            datetimeCreate = Date().toString(), datetimeModify = null,
         )
         userNamePasswordDomainService.save(registeredUser)
 
@@ -132,16 +128,10 @@ class AuthController(
         }
         val pictureUrl = payload["picture"] as String?
         val entity = GoogleUserData(
-            id = userId,
-            type = UserType.Client,
-            email = email,
-            username = name,
-            googleId = googleId,
-            imageUri = pictureUrl,
-            description = null,
-            datetimeCreate = Date().toString(),
-            datetimeModify = null,
-            orders = setOf(),
+            id = userId, type = UserType.Client, serviceItem = null,
+            email = email, username = name, googleId = googleId,
+            imageUri = pictureUrl, description = null,
+            datetimeCreate = Date().toString(), datetimeModify = null,
         )
         userGoogleDomainService.save(entity)
         logger.info { "Google user $name successfully authorized" }

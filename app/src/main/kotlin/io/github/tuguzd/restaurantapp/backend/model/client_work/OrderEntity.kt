@@ -7,6 +7,7 @@ import io.github.tuguzd.restaurantapp.domain.model.client_work.order.OrderData
 import io.github.tuguzd.restaurantapp.domain.model.util.NanoId
 import io.github.tuguzd.restaurantapp.domain.util.randomNanoId
 import org.springframework.data.util.ProxyUtils
+import java.util.*
 import javax.persistence.*
 
 @Entity
@@ -16,7 +17,7 @@ class OrderEntity(
 
     @ManyToOne(cascade = [CascadeType.MERGE], fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    override val user: UserEntity,
+    override val creator: UserEntity,
 
     @ManyToOne(cascade = [CascadeType.MERGE], fetch = FetchType.EAGER)
     @JoinColumn(name = "service_item_point_id", referencedColumnName = "id")
@@ -27,11 +28,8 @@ class OrderEntity(
 
     override val description: String?,
 
-    override val datetimeCreate: String,
-    override val datetimeModify: String?,
-
-    @OneToMany(cascade = [CascadeType.MERGE], mappedBy = "order", fetch = FetchType.EAGER)
-    override val orderItems: Set<OrderItemEntity>,
+    override val datetimeCreate: String = Date().toString(),
+    override val datetimeModify: String? = null,
 ) : Order {
 
     override fun equals(other: Any?): Boolean {
@@ -47,13 +45,11 @@ class OrderEntity(
 }
 
 fun OrderEntity.toData() = OrderData(
-    id, user, serviceItemPoint, clientCount, purchased,
-    description, datetimeCreate, datetimeModify, orderItems,
+    id, creator, serviceItemPoint, clientCount, purchased,
+    description, datetimeCreate, datetimeModify,
 )
 
-@Suppress("UNCHECKED_CAST")
 fun OrderData.toEntity() = OrderEntity(
-    id, user as UserEntity, serviceItemPoint as ServiceItemPointEntity,
-    clientCount, purchased, description, datetimeCreate,
-    datetimeModify, orderItems as Set<OrderItemEntity>,
+    id, creator as UserEntity, serviceItemPoint as ServiceItemPointEntity,
+    clientCount, purchased, description, datetimeCreate, datetimeModify,
 )
