@@ -11,7 +11,7 @@ class UserInitializer(private val passwordEncoder: PasswordEncoder) {
     private fun initUser(username: String, password: String, role: UserType): UserNamePasswordEntity {
         require(checkUsername(username) && checkPassword(password))
         return UserNamePasswordEntity(
-            type = role, serviceItem = null, email = null, username = username,
+            userType = role, serviceItem = null, email = null, username = username,
             password = passwordEncoder.encode(password), imageUri = null, description = null,
         )
     }
@@ -21,7 +21,8 @@ class UserInitializer(private val passwordEncoder: PasswordEncoder) {
         password = "t3st_manager-PASS", role = UserType.Manager,
     )
     val chefFirstUser = initUser(
-        username = "test_chef_first", password = "t3st_chef-PASS", role = UserType.Chef,
+        username = "test_chef_first",
+        password = "t3st_chef-PASS", role = UserType.Chef,
     )
     val lineCookFirstUser = initUser(
         username = "test_line_cook_first",
@@ -41,7 +42,8 @@ class UserInitializer(private val passwordEncoder: PasswordEncoder) {
         password = "t3st_manager-PASS", role = UserType.Manager,
     )
     val chefSecondUser = initUser(
-        username = "test_chef_second", password = "t3st_chef-PASS", role = UserType.Chef,
+        username = "test_chef_second",
+        password = "t3st_chef-PASS", role = UserType.Chef,
     )
     val lineCookSecondUser = initUser(
         username = "test_line_cook_second",

@@ -1,6 +1,8 @@
 package io.github.tuguzd.restaurantapp.backend.model.meal
 
 import io.github.tuguzd.restaurantapp.backend.model.access_control.user.UserEntity
+import io.github.tuguzd.restaurantapp.backend.model.access_control.user.toData
+import io.github.tuguzd.restaurantapp.backend.model.access_control.user.toEntity
 import io.github.tuguzd.restaurantapp.domain.model.meal.menu_item.MenuItem
 import io.github.tuguzd.restaurantapp.domain.model.meal.menu_item.MenuItemData
 import io.github.tuguzd.restaurantapp.domain.model.meal.menu_item.MenuItemType
@@ -14,7 +16,7 @@ import javax.persistence.*
 @Table(name = "\"menu_item\"")
 class MenuItemEntity(
     @Id override val id: NanoId = randomNanoId(),
-    override val type: MenuItemType,
+    override val menuItemType: MenuItemType,
 
     @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     @JoinColumn(name = "menu_id", referencedColumnName = "id")
@@ -45,12 +47,12 @@ class MenuItemEntity(
     override fun hashCode(): Int = javaClass.hashCode()
 }
 
-fun MenuItemEntity.toData() = MenuItemData(
-    id, type, menu, creator, name,
-    imageUri, description, datetimeCreate, datetimeModify,
+fun MenuItemEntity.toData(): MenuItemData = MenuItemData(
+    id, menuItemType, menu.toData(), creator.toData(),
+    name, imageUri, description, datetimeCreate, datetimeModify,
 )
 
-fun MenuItemData.toEntity() = MenuItemEntity(
-    id, type, menu as MenuEntity, creator as UserEntity, name,
-    imageUri, description, datetimeCreate, datetimeModify,
+fun MenuItemData.toEntity(): MenuItemEntity = MenuItemEntity(
+    id, menuItemType, menu.toEntity(), creator.toEntity(),
+    name, imageUri, description, datetimeCreate, datetimeModify,
 )

@@ -18,7 +18,7 @@ class OrganizationInitializer(private val user: UserInitializer) {
         inner class FineServiceItem {
 
             val item = ServiceItemEntity(
-                type = ServiceItemType.Serving, service = service, description = null,
+                serviceItemType = ServiceItemType.Serving, service = service, description = null,
                 name = "fine_test_first_service", address = "Moscow Center", imageUri = null,
             )
 
@@ -39,7 +39,7 @@ class OrganizationInitializer(private val user: UserInitializer) {
         inner class BadServiceItem {
 
             val item = ServiceItemEntity(
-                type = ServiceItemType.Serving, service = service, description = null,
+                serviceItemType = ServiceItemType.Serving, service = service, description = null,
                 name = "bad_test_first_service", address = "Muhosransk outskirts", imageUri = null,
             )
 
@@ -68,7 +68,7 @@ class OrganizationInitializer(private val user: UserInitializer) {
         inner class FineServiceItem {
 
             val item = ServiceItemEntity(
-                type = ServiceItemType.Serving, service = service, description = null,
+                serviceItemType = ServiceItemType.Serving, service = service, description = null,
                 name = "fine_test_second_service", address = "Moscow Center", imageUri = null,
             )
 
@@ -89,7 +89,7 @@ class OrganizationInitializer(private val user: UserInitializer) {
         inner class BadServiceItem {
 
             val item = ServiceItemEntity(
-                type = ServiceItemType.Serving, service = service, description = null,
+                serviceItemType = ServiceItemType.Serving, service = service, description = null,
                 name = "bad_test_second_service", address = "Muhosransk outskirts", imageUri = null,
             )
 

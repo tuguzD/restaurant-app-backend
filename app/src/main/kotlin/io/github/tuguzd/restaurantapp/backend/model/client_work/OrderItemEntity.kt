@@ -1,6 +1,8 @@
 package io.github.tuguzd.restaurantapp.backend.model.client_work
 
 import io.github.tuguzd.restaurantapp.backend.model.meal.MenuItemEntity
+import io.github.tuguzd.restaurantapp.backend.model.meal.toData
+import io.github.tuguzd.restaurantapp.backend.model.meal.toEntity
 import io.github.tuguzd.restaurantapp.domain.model.client_work.order_item.OrderItem
 import io.github.tuguzd.restaurantapp.domain.model.client_work.order_item.OrderItemData
 import io.github.tuguzd.restaurantapp.domain.model.util.NanoId
@@ -41,12 +43,12 @@ class OrderItemEntity(
     override fun hashCode(): Int = javaClass.hashCode()
 }
 
-fun OrderItemEntity.toData() = OrderItemData(
-    id, order, menuItem, itemCount,
+fun OrderItemEntity.toData(): OrderItemData = OrderItemData(
+    id, order.toData(), menuItem.toData(), itemCount,
     description, datetimeCreate, datetimeModify,
 )
 
-fun OrderItemData.toEntity() = OrderItemEntity(
-    id, order as OrderEntity, menuItem as MenuItemEntity,
-    itemCount, description, datetimeCreate, datetimeModify,
+fun OrderItemData.toEntity(): OrderItemEntity = OrderItemEntity(
+    id, order.toEntity(), menuItem.toEntity(), itemCount,
+    description, datetimeCreate, datetimeModify,
 )

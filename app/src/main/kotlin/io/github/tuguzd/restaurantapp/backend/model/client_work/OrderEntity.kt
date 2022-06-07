@@ -1,7 +1,11 @@
 package io.github.tuguzd.restaurantapp.backend.model.client_work
 
 import io.github.tuguzd.restaurantapp.backend.model.access_control.user.UserEntity
+import io.github.tuguzd.restaurantapp.backend.model.access_control.user.toData
+import io.github.tuguzd.restaurantapp.backend.model.access_control.user.toEntity
 import io.github.tuguzd.restaurantapp.backend.model.organization.ServiceItemPointEntity
+import io.github.tuguzd.restaurantapp.backend.model.organization.toData
+import io.github.tuguzd.restaurantapp.backend.model.organization.toEntity
 import io.github.tuguzd.restaurantapp.domain.model.client_work.order.Order
 import io.github.tuguzd.restaurantapp.domain.model.client_work.order.OrderData
 import io.github.tuguzd.restaurantapp.domain.model.util.NanoId
@@ -44,12 +48,12 @@ class OrderEntity(
     override fun hashCode(): Int = javaClass.hashCode()
 }
 
-fun OrderEntity.toData() = OrderData(
-    id, creator, serviceItemPoint, clientCount, purchased,
-    description, datetimeCreate, datetimeModify,
+fun OrderEntity.toData(): OrderData = OrderData(
+    id, creator.toData(), serviceItemPoint.toData(), clientCount,
+    purchased, description, datetimeCreate, datetimeModify,
 )
 
-fun OrderData.toEntity() = OrderEntity(
-    id, creator as UserEntity, serviceItemPoint as ServiceItemPointEntity,
-    clientCount, purchased, description, datetimeCreate, datetimeModify,
+fun OrderData.toEntity(): OrderEntity = OrderEntity(
+    id, creator.toEntity(), serviceItemPoint.toEntity(), clientCount,
+    purchased, description, datetimeCreate, datetimeModify,
 )

@@ -13,7 +13,7 @@ import javax.persistence.*
 @Table(name = "\"service_item\"")
 class ServiceItemEntity(
     @Id override val id: NanoId = randomNanoId(),
-    override val type: ServiceItemType,
+    override val serviceItemType: ServiceItemType,
 
     @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     @JoinColumn(name = "service_id", referencedColumnName = "id")
@@ -41,12 +41,12 @@ class ServiceItemEntity(
     override fun hashCode(): Int = javaClass.hashCode()
 }
 
-fun ServiceItemEntity.toData() = ServiceItemData(
-    id, type, service, name, address,
+fun ServiceItemEntity.toData(): ServiceItemData = ServiceItemData(
+    id, serviceItemType, service.toData(), name, address,
     imageUri, description, datetimeCreate, datetimeModify,
 )
 
-fun ServiceItemData.toEntity() = ServiceItemEntity(
-    id, type, service as ServiceEntity, name, address,
+fun ServiceItemData.toEntity(): ServiceItemEntity = ServiceItemEntity(
+    id, serviceItemType, service.toEntity(), name, address,
     imageUri, description, datetimeCreate, datetimeModify,
 )

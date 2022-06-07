@@ -1,6 +1,8 @@
 package io.github.tuguzd.restaurantapp.backend.model.organization
 
 import io.github.tuguzd.restaurantapp.backend.model.access_control.user.UserEntity
+import io.github.tuguzd.restaurantapp.backend.model.access_control.user.toData
+import io.github.tuguzd.restaurantapp.backend.model.access_control.user.toEntity
 import io.github.tuguzd.restaurantapp.domain.model.organization.service_item_point.ServiceItemPoint
 import io.github.tuguzd.restaurantapp.domain.model.organization.service_item_point.ServiceItemPointData
 import io.github.tuguzd.restaurantapp.domain.model.util.NanoId
@@ -46,12 +48,12 @@ class ServiceItemPointEntity(
     override fun hashCode(): Int = javaClass.hashCode()
 }
 
-fun ServiceItemPointEntity.toData() = ServiceItemPointData(
-    id, creator, serviceItem, name, availability, clientMaxCount,
-    imageUri, description, datetimeCreate, datetimeModify,
+fun ServiceItemPointEntity.toData(): ServiceItemPointData = ServiceItemPointData(
+    id, creator.toData(), serviceItem.toData(), name, availability,
+    clientMaxCount, imageUri, description, datetimeCreate, datetimeModify,
 )
 
-fun ServiceItemPointData.toEntity() = ServiceItemPointEntity(
-    id, creator as UserEntity, serviceItem as ServiceItemEntity, name, availability,
+fun ServiceItemPointData.toEntity(): ServiceItemPointEntity = ServiceItemPointEntity(
+    id, creator.toEntity(), serviceItem.toEntity(), name, availability,
     clientMaxCount, imageUri, description, datetimeCreate, datetimeModify,
 )

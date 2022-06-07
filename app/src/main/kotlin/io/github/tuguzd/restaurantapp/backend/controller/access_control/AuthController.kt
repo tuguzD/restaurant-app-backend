@@ -11,8 +11,7 @@ import io.github.tuguzd.restaurantapp.backend.model.access_control.user.google_u
 import io.github.tuguzd.restaurantapp.backend.model.access_control.user.password_user.UserNamePasswordData
 import io.github.tuguzd.restaurantapp.backend.security.JwtUtils
 import io.github.tuguzd.restaurantapp.backend.security.UserDetailsService
-import io.github.tuguzd.restaurantapp.backend.service.access_control.user.UserGoogleDomainService
-import io.github.tuguzd.restaurantapp.backend.service.access_control.user.UserNamePasswordDomainService
+import io.github.tuguzd.restaurantapp.backend.service.access_control.user.*
 import io.github.tuguzd.restaurantapp.domain.model.access_control.credential.UserCredentialsData
 import io.github.tuguzd.restaurantapp.domain.model.access_control.token.UserTokenData
 import io.github.tuguzd.restaurantapp.domain.model.access_control.user.UserType
@@ -32,7 +31,6 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
-import java.util.Date
 
 @RestController
 @Tag(name = "Аутентификация", description = "Конечные сетевые точки обращения для аутентификации")
@@ -87,11 +85,10 @@ class AuthController(
         checkUserNotExists(credentials)
 
         val registeredUser = UserNamePasswordData(
-            type = UserType.Client, serviceItem = null,
+            userType = UserType.Client, serviceItem = null,
             email = null, username = credentials.username,
             password = passwordEncoder.encode(credentials.password),
             imageUri = null, description = null,
-            datetimeCreate = Date().toString(), datetimeModify = null,
         )
         userNamePasswordDomainService.save(registeredUser)
 
@@ -128,10 +125,9 @@ class AuthController(
         }
         val pictureUrl = payload["picture"] as String?
         val entity = GoogleUserData(
-            id = userId, type = UserType.Client, serviceItem = null,
+            id = userId, userType = UserType.Client, serviceItem = null,
             email = email, username = name, googleId = googleId,
             imageUri = pictureUrl, description = null,
-            datetimeCreate = Date().toString(), datetimeModify = null,
         )
         userGoogleDomainService.save(entity)
         logger.info { "Google user $name successfully authorized" }

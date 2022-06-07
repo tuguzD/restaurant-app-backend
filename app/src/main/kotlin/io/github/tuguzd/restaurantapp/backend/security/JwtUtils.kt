@@ -22,7 +22,7 @@ class JwtUtils(private val applicationConfiguration: ApplicationConfiguration) {
     fun extractExpiration(token: String): Date = extractClaim(token, Claims::getExpiration)
 
     fun extractRole(token: String): UserType = extractClaim(token) {
-        UserType.valueOf(getTyped(User::type.name))
+        UserType.valueOf(getTyped(User::userType.name))
     }
 
     fun <T> extractClaim(token: String, claimsResolver: Claims.() -> T): T {
@@ -31,7 +31,7 @@ class JwtUtils(private val applicationConfiguration: ApplicationConfiguration) {
     }
 
     fun generateToken(userDetails: UserDetails): String {
-        val claims = mutableMapOf(User::type.name to userDetails.authorities.first().authority)
+        val claims = mutableMapOf(User::userType.name to userDetails.authorities.first().authority)
         return createToken(claims, userDetails.username)
     }
 

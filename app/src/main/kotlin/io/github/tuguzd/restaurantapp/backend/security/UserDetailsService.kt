@@ -17,18 +17,20 @@ class UserDetailsService(
 ) : UserDetailsService {
 
     override fun loadUserByUsername(username: String): UserDetails {
-        return when (val user = runBlocking { userNamePasswordService.findByUsername(username) }) {
+        return when (
+            val user = runBlocking { userNamePasswordService.findByUsername(username) }
+        ) {
             null -> {
                 val googleUser = runBlocking { userService.readByUsername(username) }
                     ?: throw UsernameNotFoundException("User $username not found")
                 User(
                     googleUser.username, "",
-                    setOf(SimpleGrantedAuthority("${googleUser.type}"))
+                    setOf(SimpleGrantedAuthority("${googleUser.userType}"))
                 )
             }
             else -> User(
                 user.username, user.password,
-                setOf(SimpleGrantedAuthority("${user.type}"))
+                setOf(SimpleGrantedAuthority("${user.userType}"))
             )
         }
     }

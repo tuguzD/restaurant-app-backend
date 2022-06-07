@@ -2,6 +2,7 @@ package io.github.tuguzd.restaurantapp.backend.model.access_control.user.passwor
 
 import io.github.tuguzd.restaurantapp.backend.model.access_control.user.UserEntity
 import io.github.tuguzd.restaurantapp.backend.model.organization.ServiceItemEntity
+import io.github.tuguzd.restaurantapp.backend.model.organization.toData
 import io.github.tuguzd.restaurantapp.domain.model.access_control.credential.UserCredentials
 import io.github.tuguzd.restaurantapp.domain.model.access_control.user.UserType
 import io.github.tuguzd.restaurantapp.domain.model.util.NanoId
@@ -12,10 +13,9 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "user_name_password")
-@PrimaryKeyJoinColumn(name = "user_id")
 class UserNamePasswordEntity(
     override val id: NanoId = randomNanoId(),
-    override val type: UserType,
+    override val userType: UserType,
 
     @ManyToOne(cascade = [CascadeType.MERGE], fetch = FetchType.EAGER)
     @JoinColumn(name = "service_item_id", referencedColumnName = "id")
@@ -31,7 +31,7 @@ class UserNamePasswordEntity(
     override val datetimeCreate: String = Date().toString(),
     override val datetimeModify: String? = null,
 ) : UserCredentials, UserEntity(
-    id, type, serviceItem, email, username,
+    id, userType, serviceItem, email, username,
     imageUri, description, datetimeCreate, datetimeModify
 ) {
 
@@ -47,12 +47,12 @@ class UserNamePasswordEntity(
     override fun hashCode(): Int = javaClass.hashCode()
 }
 
-fun UserNamePasswordEntity.toPasswordData() = UserNamePasswordData(
-    id, type, serviceItem, email, username, password, imageUri,
+fun UserNamePasswordEntity.toPasswordData(): UserNamePasswordData = UserNamePasswordData(
+    id, userType, serviceItem?.toData(), email, username, password, imageUri,
     description, datetimeCreate, datetimeModify,
 )
 
-fun UserNamePasswordData.toPasswordEntity() = UserNamePasswordEntity(
-    id, type, serviceItem as ServiceItemEntity?, email, username, password,
+fun UserNamePasswordData.toPasswordEntity(): UserNamePasswordEntity = UserNamePasswordEntity(
+    id, userType, serviceItem as ServiceItemEntity?, email, username, password,
     imageUri, description, datetimeCreate, datetimeModify,
 )

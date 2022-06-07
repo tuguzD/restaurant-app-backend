@@ -2,6 +2,7 @@ package io.github.tuguzd.restaurantapp.backend.model.access_control.user.google_
 
 import io.github.tuguzd.restaurantapp.backend.model.access_control.user.UserEntity
 import io.github.tuguzd.restaurantapp.backend.model.organization.ServiceItemEntity
+import io.github.tuguzd.restaurantapp.backend.model.organization.toData
 import io.github.tuguzd.restaurantapp.domain.model.access_control.user.UserType
 import io.github.tuguzd.restaurantapp.domain.model.util.NanoId
 import io.github.tuguzd.restaurantapp.domain.util.randomNanoId
@@ -11,10 +12,9 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "user_google")
-@PrimaryKeyJoinColumn(name = "user_id")
 class GoogleUserEntity(
     override val id: NanoId = randomNanoId(),
-    override val type: UserType,
+    override val userType: UserType,
 
     @ManyToOne(cascade = [CascadeType.MERGE], fetch = FetchType.EAGER)
     @JoinColumn(name = "service_item_id", referencedColumnName = "id")
@@ -30,8 +30,8 @@ class GoogleUserEntity(
     override val datetimeCreate: String = Date().toString(),
     override val datetimeModify: String? = null,
 ) : UserEntity(
-    id, type, serviceItem, email, username,
-    description, imageUri, datetimeCreate, datetimeModify,
+    id, userType, serviceItem, email, username,
+    imageUri, description, datetimeCreate, datetimeModify,
 ) {
 
     override fun equals(other: Any?): Boolean {
@@ -46,12 +46,12 @@ class GoogleUserEntity(
     override fun hashCode() = javaClass.hashCode()
 }
 
-fun GoogleUserEntity.toGoogleData() = GoogleUserData(
-    id, type, serviceItem, email, username, googleId,
+fun GoogleUserEntity.toGoogleData(): GoogleUserData = GoogleUserData(
+    id, userType, serviceItem?.toData(), email, username, googleId,
     imageUri, description, datetimeCreate, datetimeModify,
 )
 
-fun GoogleUserData.toGoogleEntity() = GoogleUserEntity(
-    id, type, serviceItem as ServiceItemEntity?, email, username, googleId,
+fun GoogleUserData.toGoogleEntity(): GoogleUserEntity = GoogleUserEntity(
+    id, userType, serviceItem as ServiceItemEntity?, email, username, googleId,
     imageUri, description, datetimeCreate, datetimeModify,
 )

@@ -17,44 +17,44 @@ class MealInitializer(private val user: UserInitializer) {
 
             val lunchMenu = MenuEntity(
                 creator = user.chefFirstUser,
-                type = MenuType.Lunch, name = "Lunch in Fine First service",
+                menuType = MenuType.Lunch, name = "Lunch in Fine First service",
                 serviceItem = org.item, imageUri = null, description = null,
             )
             val breakfastMenu = MenuEntity(
                 creator = user.chefFirstUser,
-                type = MenuType.Breakfast, name = "Breakfast in Fine First service",
+                menuType = MenuType.Breakfast, name = "Breakfast in Fine First service",
                 serviceItem = org.item, imageUri = null, description = null,
             )
 
             val firstLunchMenuItem = MenuItemEntity(
                 creator = user.chefFirstUser,
-                type = MenuItemType.Cocktail, name = "Strawberry cocktail",
+                menuItemType = MenuItemType.Cocktail, name = "Strawberry cocktail",
                 menu = lunchMenu, imageUri = null, description = null,
             )
             val secondLunchMenuItem = MenuItemEntity(
                 creator = user.chefFirstUser,
-                type = MenuItemType.Dessert, name = "Strawberry ice cream",
+                menuItemType = MenuItemType.Dessert, name = "Strawberry ice cream",
                 menu = lunchMenu, imageUri = null, description = null,
             )
             val thirdLunchMenuItem = MenuItemEntity(
                 creator = user.chefFirstUser,
-                type = MenuItemType.Beverage, name = "Good Beer",
+                menuItemType = MenuItemType.Beverage, name = "Good Beer",
                 menu = lunchMenu, imageUri = null, description = null,
             )
 
             val firstBreakfastMenuItem = MenuItemEntity(
                 creator = user.chefFirstUser,
-                type = MenuItemType.Cold, name = "Meat Salad",
+                menuItemType = MenuItemType.Cold, name = "Meat Salad",
                 menu = breakfastMenu, imageUri = null, description = null,
             )
             val secondBreakfastMenuItem = MenuItemEntity(
                 creator = user.chefFirstUser,
-                type = MenuItemType.Hot, name = "Caesar Salad",
+                menuItemType = MenuItemType.Hot, name = "Caesar Salad",
                 menu = breakfastMenu, imageUri = null, description = null,
             )
             val thirdBreakfastMenuItem = MenuItemEntity(
                 creator = user.chefFirstUser,
-                type = MenuItemType.Vegetarian, name = "Fruit Salad",
+                menuItemType = MenuItemType.Vegetarian, name = "Fruit Salad",
                 menu = breakfastMenu, imageUri = null, description = null,
             )
         }
@@ -65,44 +65,44 @@ class MealInitializer(private val user: UserInitializer) {
 
             val lunchMenu = MenuEntity(
                 creator = user.chefFirstUser,
-                type = MenuType.Lunch, name = "Lunch in Bad First service",
+                menuType = MenuType.Lunch, name = "Lunch in Bad First service",
                 serviceItem = org.item, imageUri = null, description = null,
             )
             val breakfastMenu = MenuEntity(
                 creator = user.chefFirstUser,
-                type = MenuType.Breakfast, name = "Breakfast in Bad First service",
+                menuType = MenuType.Breakfast, name = "Breakfast in Bad First service",
                 serviceItem = org.item, imageUri = null, description = null,
             )
 
             val firstLunchMenuItem = MenuItemEntity(
                 creator = user.chefFirstUser,
-                type = MenuItemType.Dessert, name = "Blackberry ice cream",
+                menuItemType = MenuItemType.Dessert, name = "Blackberry ice cream",
                 menu = lunchMenu, imageUri = null, description = null,
             )
             val secondLunchMenuItem = MenuItemEntity(
                 creator = user.chefFirstUser,
-                type = MenuItemType.Cocktail, name = "Blackberry cocktail",
+                menuItemType = MenuItemType.Cocktail, name = "Blackberry cocktail",
                 menu = lunchMenu, imageUri = null, description = null,
             )
             val thirdLunchMenuItem = MenuItemEntity(
                 creator = user.chefFirstUser,
-                type = MenuItemType.Beverage, name = "Old Vine",
+                menuItemType = MenuItemType.Beverage, name = "Old Vine",
                 menu = lunchMenu, imageUri = null, description = null,
             )
 
             val firstBreakfastMenuItem = MenuItemEntity(
                 creator = user.chefFirstUser,
-                type = MenuItemType.Vegetarian, name = "Porridge",
+                menuItemType = MenuItemType.Vegetarian, name = "Porridge",
                 menu = breakfastMenu, imageUri = null, description = null,
             )
             val secondBreakfastMenuItem = MenuItemEntity(
                 creator = user.chefFirstUser,
-                type = MenuItemType.Hot, name = "Chicken Salad",
+                menuItemType = MenuItemType.Hot, name = "Chicken Salad",
                 menu = breakfastMenu, imageUri = null, description = null,
             )
             val thirdBreakfastMenuItem = MenuItemEntity(
                 creator = user.chefFirstUser,
-                type = MenuItemType.Cold, name = "Idk Salad",
+                menuItemType = MenuItemType.Cold, name = "Idk Salad",
                 menu = breakfastMenu, imageUri = null, description = null,
             )
         }
@@ -116,44 +116,44 @@ class MealInitializer(private val user: UserInitializer) {
 
             val lunchMenu = MenuEntity(
                 creator = user.chefSecondUser,
-                type = MenuType.Lunch, name = "Lunch in Fine Second service",
+                menuType = MenuType.Lunch, name = "Lunch in Fine Second service",
                 serviceItem = org.item, imageUri = null, description = null,
             )
             val breakfastMenu = MenuEntity(
                 creator = user.chefSecondUser,
-                type = MenuType.Breakfast, name = "Breakfast in Fine Second service",
+                menuType = MenuType.Breakfast, name = "Breakfast in Fine Second service",
                 serviceItem = org.item, imageUri = null, description = null,
             )
 
             val firstLunchMenuItem = MenuItemEntity(
                 creator = user.chefSecondUser,
-                type = MenuItemType.Cocktail, name = "Boozy frozen lemonade",
+                menuItemType = MenuItemType.Cocktail, name = "Boozy frozen lemonade",
                 menu = lunchMenu, imageUri = null, description = null,
             )
             val secondLunchMenuItem = MenuItemEntity(
                 creator = user.chefSecondUser,
-                type = MenuItemType.Dessert, name = "Creme brulee",
+                menuItemType = MenuItemType.Dessert, name = "Creme brulee",
                 menu = lunchMenu, imageUri = null, description = null,
             )
             val thirdLunchMenuItem = MenuItemEntity(
                 creator = user.chefSecondUser,
-                type = MenuItemType.Beverage, name = "Excellent Whisky",
+                menuItemType = MenuItemType.Beverage, name = "Excellent Whisky",
                 menu = lunchMenu, imageUri = null, description = null,
             )
 
             val firstBreakfastMenuItem = MenuItemEntity(
                 creator = user.chefSecondUser,
-                type = MenuItemType.Cold, name = "Watermelon Poke Bowls",
+                menuItemType = MenuItemType.Cold, name = "Watermelon Poke Bowls",
                 menu = breakfastMenu, imageUri = null, description = null,
             )
             val secondBreakfastMenuItem = MenuItemEntity(
                 creator = user.chefSecondUser,
-                type = MenuItemType.Hot, name = "Cheese burger",
+                menuItemType = MenuItemType.Hot, name = "Cheese burger",
                 menu = breakfastMenu, imageUri = null, description = null,
             )
             val thirdBreakfastMenuItem = MenuItemEntity(
                 creator = user.chefSecondUser,
-                type = MenuItemType.Vegetarian, name = "Potato burger",
+                menuItemType = MenuItemType.Vegetarian, name = "Potato burger",
                 menu = breakfastMenu, imageUri = null, description = null,
             )
         }
@@ -164,44 +164,44 @@ class MealInitializer(private val user: UserInitializer) {
 
             val lunchMenu = MenuEntity(
                 creator = user.chefSecondUser,
-                type = MenuType.Lunch, name = "Lunch in Bad Second service",
+                menuType = MenuType.Lunch, name = "Lunch in Bad Second service",
                 serviceItem = org.item, imageUri = null, description = null,
             )
             val breakfastMenu = MenuEntity(
                 creator = user.chefSecondUser,
-                type = MenuType.Breakfast, name = "Breakfast in Bad Second service",
+                menuType = MenuType.Breakfast, name = "Breakfast in Bad Second service",
                 serviceItem = org.item, imageUri = null, description = null,
             )
 
             val firstLunchMenuItem = MenuItemEntity(
                 creator = user.chefSecondUser,
-                type = MenuItemType.Dessert, name = "Anzac biscuit tarts",
+                menuItemType = MenuItemType.Dessert, name = "Anzac biscuit tarts",
                 menu = lunchMenu, imageUri = null, description = null,
             )
             val secondLunchMenuItem = MenuItemEntity(
                 creator = user.chefSecondUser,
-                type = MenuItemType.Cocktail, name = "Apple juice",
+                menuItemType = MenuItemType.Cocktail, name = "Apple juice",
                 menu = lunchMenu, imageUri = null, description = null,
             )
             val thirdLunchMenuItem = MenuItemEntity(
                 creator = user.chefSecondUser,
-                type = MenuItemType.Beverage, name = "Cheap Vodka",
+                menuItemType = MenuItemType.Beverage, name = "Cheap Vodka",
                 menu = lunchMenu, imageUri = null, description = null,
             )
 
             val firstBreakfastMenuItem = MenuItemEntity(
                 creator = user.chefSecondUser,
-                type = MenuItemType.Vegetarian, name = "Broccoli cutlet",
+                menuItemType = MenuItemType.Vegetarian, name = "Broccoli cutlet",
                 menu = breakfastMenu, imageUri = null, description = null,
             )
             val secondBreakfastMenuItem = MenuItemEntity(
                 creator = user.chefSecondUser,
-                type = MenuItemType.Hot, name = "Beef steak",
+                menuItemType = MenuItemType.Hot, name = "Beef steak",
                 menu = breakfastMenu, imageUri = null, description = null,
             )
             val thirdBreakfastMenuItem = MenuItemEntity(
                 creator = user.chefSecondUser,
-                type = MenuItemType.Cold, name = "Sesame Cucumber Noodles",
+                menuItemType = MenuItemType.Cold, name = "Sesame Cucumber Noodles",
                 menu = breakfastMenu, imageUri = null, description = null,
             )
         }

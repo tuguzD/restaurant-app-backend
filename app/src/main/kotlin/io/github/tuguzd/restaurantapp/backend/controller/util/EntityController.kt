@@ -13,12 +13,17 @@ abstract class EntityController<I, T : Identifiable<I>> : CrudRepositoryService<
     }
     protected abstract val service: CrudRepositoryService<I, T>
 
-    override suspend fun readAll(): List<T> = service.readAll()
+    override suspend fun readAll(): List<T> {
+        val list = service.readAll()
+        logger.info { list.toString() }
+
+        return list
+    }
 
     @GetMapping("all")
-    suspend fun readAllApi(): List<T> {
+    suspend fun readAllApi(): ResponseEntity<List<T>> {
         logger.info { "Requested all items from ${service::class.simpleName}" }
-        return readAll()
+        return ResponseEntity.ok(readAll())
     }
 
     override suspend fun readById(id: I): T? = service.readById(id)
@@ -27,7 +32,7 @@ abstract class EntityController<I, T : Identifiable<I>> : CrudRepositoryService<
     suspend fun readByIdApi(
         @PathVariable
         id: I
-    ): ResponseEntity<T> {
+    ): ResponseEntity<T?> {
         logger.info { "Requested item from ${service::class.simpleName} with ID $id" }
         val item = readById(id)
         if (item == null) {
@@ -61,22 +66,22 @@ abstract class EntityController<I, T : Identifiable<I>> : CrudRepositoryService<
     suspend fun deleteApi(
         @PathVariable
         id: I
-    ) {
+    ): ResponseEntity<Unit> {
         logger.info {
             "Requested deletion of item from " +
                 "${service::class.simpleName} with ID $id"
         }
-        return delete(id)
+        return ResponseEntity.ok(delete(id))
     }
 
     override suspend fun clear() = service.clear()
 
     @DeleteMapping("clear")
-    suspend fun clearApi() {
+    suspend fun clearApi(): ResponseEntity<Unit> {
         logger.info {
             "Requested deletion of all items " +
                 "from ${service::class.simpleName}"
         }
-        return clear()
+        return ResponseEntity.ok(clear())
     }
 }

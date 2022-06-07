@@ -1,6 +1,7 @@
 package io.github.tuguzd.restaurantapp.backend.model.access_control.user
 
 import io.github.tuguzd.restaurantapp.backend.model.organization.ServiceItemEntity
+import io.github.tuguzd.restaurantapp.backend.model.organization.toData
 import io.github.tuguzd.restaurantapp.domain.model.access_control.user.User
 import io.github.tuguzd.restaurantapp.domain.model.access_control.user.UserData
 import io.github.tuguzd.restaurantapp.domain.model.access_control.user.UserType
@@ -15,7 +16,7 @@ import javax.persistence.*
 @Inheritance(strategy = InheritanceType.JOINED)
 open class UserEntity(
     @Id override val id: NanoId = randomNanoId(),
-    override val type: UserType,
+    override val userType: UserType,
 
     @ManyToOne(cascade = [CascadeType.MERGE], fetch = FetchType.EAGER)
     @JoinColumn(name = "service_item_id", referencedColumnName = "id")
@@ -43,12 +44,12 @@ open class UserEntity(
     override fun hashCode(): Int = javaClass.hashCode()
 }
 
-fun UserEntity.toData() = UserData(
-    id, type, serviceItem, email, username, imageUri,
+fun UserEntity.toData(): UserData = UserData(
+    id, userType, serviceItem?.toData(), email, username, imageUri,
     description, datetimeCreate, datetimeModify,
 )
 
-fun UserData.toEntity() = UserEntity(
-    id, type, serviceItem as ServiceItemEntity?, email, username,
+fun UserData.toEntity(): UserEntity = UserEntity(
+    id, userType, serviceItem as ServiceItemEntity?, email, username,
     imageUri, description, datetimeCreate, datetimeModify,
 )
