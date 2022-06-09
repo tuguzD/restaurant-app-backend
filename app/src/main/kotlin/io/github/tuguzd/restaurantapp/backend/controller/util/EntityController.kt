@@ -13,12 +13,7 @@ abstract class EntityController<I, T : Identifiable<I>> : CrudRepositoryService<
     }
     protected abstract val service: CrudRepositoryService<I, T>
 
-    override suspend fun readAll(): List<T> {
-        val list = service.readAll()
-        logger.info { list.toString() }
-
-        return list
-    }
+    override suspend fun readAll(): List<T> = service.readAll()
 
     @GetMapping("all")
     suspend fun readAllApi(): ResponseEntity<List<T>> {

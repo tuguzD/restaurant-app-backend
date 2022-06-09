@@ -37,6 +37,7 @@ class ClientWorkInitializer {
             )
             val firstPointOrderItemSecond = OrderItemEntity(
                 order = firstPointOrder, description = null,
+                ready = true, delivered = false,
                 itemCount = 1, menuItem = menu.thirdLunchMenuItem,
             )
             val firstPointOrderItemThird = OrderItemEntity(
@@ -49,7 +50,7 @@ class ClientWorkInitializer {
                 itemCount = 2, menuItem = menu.thirdBreakfastMenuItem,
             )
             val secondPointOrderItemSecond = OrderItemEntity(
-                order = firstPointOrder, description = null,
+                order = secondPointOrder, description = null,
                 itemCount = 2, menuItem = menu.firstLunchMenuItem,
             )
 
@@ -82,14 +83,17 @@ class ClientWorkInitializer {
 
             val firstPointOrderItemFirst = OrderItemEntity(
                 order = firstPointOrder, description = null,
+                ready = true, delivered = true,
                 itemCount = 2, menuItem = menu.firstBreakfastMenuItem,
             )
             val firstPointOrderItemSecond = OrderItemEntity(
                 order = firstPointOrder, description = null,
+                ready = true, delivered = true,
                 itemCount = 3, menuItem = menu.thirdLunchMenuItem,
             )
             val firstPointOrderItemThird = OrderItemEntity(
                 order = firstPointOrder, description = null,
+                ready = true, delivered = true,
                 itemCount = 1, menuItem = menu.secondBreakfastMenuItem,
             )
 
@@ -98,11 +102,12 @@ class ClientWorkInitializer {
                 itemCount = 1, menuItem = menu.thirdBreakfastMenuItem,
             )
             val secondPointOrderItemSecond = OrderItemEntity(
-                order = firstPointOrder, description = null,
+                order = secondPointOrder, description = null,
                 itemCount = 1, menuItem = menu.firstLunchMenuItem,
             )
 
             val thirdPointOrderItemFirst = OrderItemEntity(
+                ready = true, delivered = false,
                 order = thirdPointOrder, description = null,
                 itemCount = 2, menuItem = menu.secondLunchMenuItem,
             )
@@ -138,6 +143,7 @@ class ClientWorkInitializer {
             )
             val firstPointOrderItemSecond = OrderItemEntity(
                 order = firstPointOrder, description = null,
+                ready = true, delivered = false,
                 itemCount = 2, menuItem = menu.thirdLunchMenuItem,
             )
             val firstPointOrderItemThird = OrderItemEntity(
@@ -147,10 +153,12 @@ class ClientWorkInitializer {
 
             val secondPointOrderItemFirst = OrderItemEntity(
                 order = secondPointOrder, description = null,
+                ready = true, delivered = true,
                 itemCount = 4, menuItem = menu.thirdBreakfastMenuItem,
             )
             val secondPointOrderItemSecond = OrderItemEntity(
-                order = firstPointOrder, description = null,
+                order = secondPointOrder, description = null,
+                ready = true, delivered = false,
                 itemCount = 2, menuItem = menu.firstLunchMenuItem,
             )
 
@@ -196,15 +204,18 @@ class ClientWorkInitializer {
 
             val secondPointOrderItemFirst = OrderItemEntity(
                 order = secondPointOrder, description = null,
+                ready = true, delivered = true,
                 itemCount = 1, menuItem = menu.thirdBreakfastMenuItem,
             )
             val secondPointOrderItemSecond = OrderItemEntity(
-                order = firstPointOrder, description = null,
+                order = secondPointOrder, description = null,
+                ready = true, delivered = false,
                 itemCount = 3, menuItem = menu.firstLunchMenuItem,
             )
 
             val thirdPointOrderItemFirst = OrderItemEntity(
                 order = thirdPointOrder, description = null,
+                ready = true, delivered = false,
                 itemCount = 2, menuItem = menu.secondLunchMenuItem,
             )
         }

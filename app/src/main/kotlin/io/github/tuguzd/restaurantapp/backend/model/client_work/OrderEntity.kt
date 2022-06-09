@@ -25,7 +25,7 @@ class OrderEntity(
 
     @ManyToOne(cascade = [CascadeType.MERGE], fetch = FetchType.EAGER)
     @JoinColumn(name = "service_item_point_id", referencedColumnName = "id")
-    override val serviceItemPoint: ServiceItemPointEntity,
+    override val serviceItemPoint: ServiceItemPointEntity?,
 
     override val clientCount: Int,
     override val purchased: Boolean,
@@ -49,11 +49,11 @@ class OrderEntity(
 }
 
 fun OrderEntity.toData(): OrderData = OrderData(
-    id, creator.toData(), serviceItemPoint.toData(), clientCount,
+    id, creator.toData(), serviceItemPoint?.toData(), clientCount,
     purchased, description, datetimeCreate, datetimeModify,
 )
 
 fun OrderData.toEntity(): OrderEntity = OrderEntity(
-    id, creator.toEntity(), serviceItemPoint.toEntity(), clientCount,
+    id, creator.toEntity(), serviceItemPoint?.toEntity(), clientCount,
     purchased, description, datetimeCreate, datetimeModify,
 )

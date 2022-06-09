@@ -27,7 +27,7 @@ class MenuEntity(
 
     @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     @JoinColumn(name = "service_item_id", referencedColumnName = "id")
-    override val serviceItem: ServiceItemEntity,
+    override val serviceItem: ServiceItemEntity?,
 
     override val name: String,
 
@@ -51,11 +51,11 @@ class MenuEntity(
 }
 
 fun MenuEntity.toData(): MenuData = MenuData(
-    id, menuType, creator.toData(), serviceItem.toData(),
+    id, menuType, creator.toData(), serviceItem?.toData(),
     name, imageUri, description, datetimeCreate, datetimeModify,
 )
 
 fun MenuData.toEntity(): MenuEntity = MenuEntity(
-    id, menuType, creator.toEntity(), serviceItem.toEntity(),
+    id, menuType, creator.toEntity(), serviceItem?.toEntity(),
     name, imageUri, description, datetimeCreate, datetimeModify,
 )

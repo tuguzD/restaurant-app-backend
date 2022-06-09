@@ -24,7 +24,11 @@ class OrderItemEntity(
     @JoinColumn(name = "menu_item_id", referencedColumnName = "id")
     override val menuItem: MenuItemEntity,
 
+    override val delivered: Boolean = false,
+    override val ready: Boolean = false,
+
     override val itemCount: Int,
+
     override val description: String?,
 
     override val datetimeCreate: String = Date().toString(),
@@ -44,11 +48,11 @@ class OrderItemEntity(
 }
 
 fun OrderItemEntity.toData(): OrderItemData = OrderItemData(
-    id, order.toData(), menuItem.toData(), itemCount,
-    description, datetimeCreate, datetimeModify,
+    id, order.toData(), menuItem.toData(), delivered, ready,
+    itemCount, description, datetimeCreate, datetimeModify,
 )
 
 fun OrderItemData.toEntity(): OrderItemEntity = OrderItemEntity(
-    id, order.toEntity(), menuItem.toEntity(), itemCount,
-    description, datetimeCreate, datetimeModify,
+    id, order.toEntity(), menuItem.toEntity(), delivered, ready,
+    itemCount, description, datetimeCreate, datetimeModify,
 )
