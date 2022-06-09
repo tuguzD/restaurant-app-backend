@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+springdoc:
+  swagger-ui:
+    path: /docs/swagger-ui.html
+    filter: true
+    try-it-out-enabled: true
+  api-docs:
+    path: /docs/api.html
+
+restaurant-app:
+  jwt:
+    secret-key: ${JWT_SECRET}
+  oauth2:
+    google:
+      client-id: ${GOOGLE_CLIENT_ID}
+      client-secret: ${GOOGLE_CLIENT_SECRET}
+      token-uri: ${GOOGLE_TOKEN_URI}
